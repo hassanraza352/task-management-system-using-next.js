@@ -1,4 +1,5 @@
 
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
       <span className="logo-icon">🌶️</span>
       Chili Spice
     </div>
-    <a href="login.html" className="landing-nav-link"><span>Already have an account?</span> Login</a>
+    < Link href="/login" className="landing-nav-link"><span>Already have an account?</span> Login</Link> 
   </div>
 
   {/* <!-- Hero --> */}
@@ -24,8 +25,8 @@ export default function Home() {
       <p>Plan your day, track every task, and hit your deadlines without the chaos. Chili Spice keeps your work organized so you can focus on what actually matters.</p>
 
       <div className="hero-btn-group">
-        <a href="register.html" className="btn-hero btn-hero-primary">🚀 Get Started — It&#39;s Free</a>
-        <a href="login.html" className="btn-hero btn-hero-secondary">Login to your account</a>
+        <Link href="/register" className="btn-hero btn-hero-primary">🚀 Get Started — It&#39;s Free</Link> 
+        <Link href="/login" className="btn-hero btn-hero-secondary">Login to your account</Link> 
       </div>
 
       <div className="landing-feature-strip">

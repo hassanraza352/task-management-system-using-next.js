@@ -1,4 +1,6 @@
 import React from 'react'
+import Link from "next/link";
+
 
 function Register() {
   return (
@@ -33,7 +35,7 @@ function Register() {
     {/* <!-- Right form panel --> */}
     <div className="auth-form-side">
       <h1>Create your account</h1>
-      <p className="auth-sub">Already have an account? <a href="login.html">Sign in</a></p>
+      <p className="auth-sub">Already have an account? <Link   href="/login">Sign in</Link>  </p>
 
       <form>
         <div className="form-group">
@@ -63,7 +65,7 @@ function Register() {
         <span className="google-g">G</span> Sign up with Google
       </button>
 
-      <p className="auth-terms">By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+      <p className="auth-terms">By signing up, you agree to our <Link   href="#">Terms of Service</Link>   and <Link   href="#">Privacy Policy</Link>  .</p>
     </div>
 
   </div>

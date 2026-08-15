@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 function Dashboard() {
   return (
@@ -10,10 +11,10 @@ function Dashboard() {
       <div className="topbar-actions">
         <div className="icon-btn">🔔<span className="dot">2</span></div>
         <div className="icon-btn">☀️</div>
-        <a href="profile.html" className="profile-chip">
+        <Link   href="/profile" className="profile-chip">
           <img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/>
           ▾
-        </a>
+        </Link>  
       </div>
     </div>
 
@@ -107,7 +108,7 @@ function Dashboard() {
             <span className="more-dots">⋮</span>
           </div>
 
-          <a href="tasks.html" className="view-all">View all tasks →</a>
+          <Link   href="/tasks" className="view-all">View all tasks →</Link>  
         </div>
       </div>
 
@@ -144,7 +145,7 @@ function Dashboard() {
             <span className="pill medium">Medium</span>
           </div>
 
-          <a href="calendar.html" className="view-all">View calendar →</a>
+          <Link   href="/calender" className="view-all">View calendar →</Link>  
         </div>
       </div>
     </div>

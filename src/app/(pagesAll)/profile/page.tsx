@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 function Profile() {
   return (
@@ -8,7 +9,7 @@ function Profile() {
       <div className="topbar-actions">
         <div className="icon-btn">🔔<span className="dot">2</span></div>
         <div className="icon-btn">☀️</div>
-        <a href="profile.html" className="profile-chip"><img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</a>
+        <Link   href="/profile" className="profile-chip"><img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</Link>  
       </div>
     </div>
 

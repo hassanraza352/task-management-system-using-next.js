@@ -1,6 +1,13 @@
+'use client'
+
 import React from 'react'
+import Link from "next/link";
+import { useRouter } from 'next/navigation';
+
 
 function Login() {
+  const router = useRouter();
+
   return (
    <div className="auth-wrapper">
   <div className="auth-card">
@@ -34,9 +41,9 @@ function Login() {
     {/* <!-- Right form panel --> */}
     <div className="auth-form-side">
       <h1>Sign in to your account</h1>
-      <p className="auth-sub">New here? <a href="register.html">Create an account</a></p>
+      <p className="auth-sub">New here? <Link   href="/register">Create an account</Link>  </p>
 
-      <form>
+      {/* <form> */}
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input type="email" id="email" placeholder="Enter your email"/>
@@ -45,7 +52,7 @@ function Login() {
         <div className="form-group">
           <div className="label-row">
             <label htmlFor="password">Password</label>
-            <a href="#" className="forgot-link">Forgot password?</a>
+            <Link   href="#" className="forgot-link">Forgot password?</Link>  
           </div>
           <div className="password-field">
             <input type="password" id="password" placeholder="Enter your password"/>
@@ -53,8 +60,8 @@ function Login() {
           </div>
         </div>
 
-        <button type="submit" className="btn btn-primary auth-submit-btn">Sign in</button>
-      </form>
+        <button onClick={()=>{router.push("/dashboard")}}  className="btn btn-primary auth-submit-btn">Sign in</button>
+      {/* </form> */}
 
       <div className="or-divider">or continue with</div>
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 function Setting() {
   return (
@@ -8,7 +9,7 @@ function Setting() {
       <div className="topbar-actions">
         <div className="icon-btn">🔔<span className="dot">2</span></div>
         <div className="icon-btn">☀️</div>
-        <a href="profile.html" className="profile-chip"><img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</a>
+        <Link   href="/profile" className="profile-chip"><img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</Link> 
       </div>
     </div>
 
@@ -19,11 +20,11 @@ function Setting() {
 
     <div className="settings-grid">
       <div className="settings-tabs">
-        <a href="#" className="active">👤 Account</a>
-        <a href="#">🔔 Notifications</a>
-        <a href="#">🔒 Security</a>
-        <a href="#">🎨 Appearance</a>
-        <a href="#">🌐 Language</a>
+        <Link   href="#" className="active">👤 Account</Link> 
+        <Link   href="#">🔔 Notifications</Link> 
+        <Link   href="#">🔒 Security</Link> 
+        <Link   href="#">🎨 Appearance</Link> 
+        <Link   href="#">🌐 Language</Link> 
       </div>
 
       <div>
