@@ -33,17 +33,17 @@ function Setting() {
           <div className="form-row">
             <div className="form-group">
               <label>Full Name</label>
-              <input type="text" value="Ali Raza"/>
+              <input type="text" defaultValue="Ali Raza"/>
             </div>
             <div className="form-group">
               <label>Email Address</label>
-              <input type="email" value="ali.raza@example.com"/>
+              <input type="email" defaultValue="ali.raza@example.com"/>
             </div>
           </div>
           <div className="form-row">
             <div className="form-group">
               <label>Phone</label>
-              <input type="text" value="+92 300 1234567"/>
+              <input type="text" defaultValue="+92 300 1234567"/>
             </div>
             <div className="form-group">
               <label>Role</label>

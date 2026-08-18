@@ -1,8 +1,16 @@
+'use client'
+
+
 import React from 'react'
 import Link from 'next/link'
+import {useState} from "react"
+import AddNewTask from '@/component/AddNewTask'
+
 
 
 function Task() {
+  const [showAddTask, setShowAddTask] = useState(false); 
+  
   return (
     <main  className="main-content">
     <div  className="topbar">
@@ -16,7 +24,16 @@ function Task() {
 
     <div  className="page-header">
       <h1>My Tasks</h1>
+       <button className="new-task-btn" onClick={() => setShowAddTask(true)}
+        >＋ New Task</button>
+        {showAddTask && (
+  <AddNewTask
+    onClose={() => setShowAddTask(false)}
+  />
+)}
+
       <p>All your tasks in one place — 12 total.</p>
+
     </div>
 
     <div  className="panel">

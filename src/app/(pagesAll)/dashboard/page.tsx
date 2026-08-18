@@ -108,7 +108,7 @@ function Dashboard() {
             <span className="more-dots">⋮</span>
           </div>
 
-          <Link   href="/tasks" className="view-all">View all tasks →</Link>  
+          <Link   href="/task" className="view-all">View all tasks →</Link>  
         </div>
       </div>
 
