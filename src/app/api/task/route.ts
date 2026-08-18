@@ -7,7 +7,6 @@ export async function POST(request: Request) {
   try {
     await connectDB();
 
-    // Get logged-in user
     const user = await protect();
 
     if (!user) {
@@ -57,6 +56,38 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error("Create task error:", error);
+
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 500 }
+    );
+  }
+}
+
+
+export async function GET() {
+  try {
+    await connectDB();
+
+    const user = await protect();
+
+    if (!user) {
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const tasks = await Task.find({
+      userId: user._id,
+    }).sort({ createdAt: -1 });
+
+    return NextResponse.json({
+      message: "Tasks fetched successfully",
+      tasks,
+    });
+  } catch (error) {
+    console.error("Get tasks error:", error);
 
     return NextResponse.json(
       { message: "Something went wrong" },
