@@ -2,11 +2,16 @@
 
 import React from 'react'
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+
 
 import Link from 'next/link'
 function Sidebar() {
 const currentPath = usePathname();
+ const { logout } = useAuth();
+
   return (
+    
     <>
      <aside className="sidebar">
     <div className="sidebar-header">
@@ -32,7 +37,7 @@ const currentPath = usePathname();
       <Link   href="/calender" className={currentPath==="/calender" ? "active":" "}><span className="icon">📅</span> Calendar</Link>
       <Link   href="/settingPage" className={currentPath==="/settingPage" ? "active":" "}><span className="icon">⚙️</span> Settings</Link>
     </nav>
-    {/* <button className="new-task-btn">＋ New Task</button> */}
+   <button className="new-task-btn" onClick={logout}>Logout</button> 
     <div className="sidebar-wave"></div>
   </aside>
 

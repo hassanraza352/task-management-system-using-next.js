@@ -495,7 +495,7 @@ ul {
 }
 
 .status-badge.todo { background: var(--pink-light); color: var(--red); }
-.status-badge.progress { background: var(--orange-light); color: var(--orange); }
+.status-badge.in-progress { background: var(--orange-light); color: var(--orange); }
 .status-badge.done { background: #dcfce7; color: #16a34a; }
 
 .more-dots {
@@ -2188,5 +2188,87 @@ ul {
   .add-btn {
     width: 100%;
     padding: 13px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.task-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.more-dots {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 2px 6px;
+  line-height: 1;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 25px;
+  right: 0;
+
+  background: rgb(200, 103, 103);
+  border: 1px solid #3e0000;
+  border-radius: 8px;
+  padding: 5px;
+
+  width: 100px;
+  max-width: calc(100vw - 20px);
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dropdown-menu button:hover {
+  background: #e2aaaa;
+}
+
+
+/* 📱 Mobile */
+@media (max-width: 600px) {
+
+  .more-dots {
+    font-size: 22px;
+    padding: 2px 5px;
+  }
+
+  .dropdown-menu {
+    width: 90px;
+    right: 0;
+    top: 28px;
+  }
+
+  .dropdown-menu button {
+    padding: 9px 7px;
+    font-size: 14px;
   }
 }

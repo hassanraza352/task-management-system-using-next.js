@@ -1,8 +1,48 @@
-import React from 'react'
+'use client'
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+
 
 
 function Register() {
+  const [name, setName] = useState("");
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const router = useRouter();
+
+// const [loading, setLoading] = useState(false);
+// const [message, setMessage] = useState("");
+// const [error, setError] = useState("");
+
+
+
+const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+router.push("/login")
+
+  } catch (error) {
+    console.error("Register error:", error);
+  }
+};
   return (
    <div className="auth-wrapper">
   <div className="auth-card">
@@ -37,21 +77,30 @@ function Register() {
       <h1>Create your account</h1>
       <p className="auth-sub">Already have an account? <Link   href="/login">Sign in</Link>  </p>
 
-      <form>
+      <form onSubmit={handleRegister} method="POST">
         <div className="form-group">
           <label htmlFor="fullname">Full Name</label>
-          <input type="text" id="fullname" placeholder="Enter your full name"/>
+          <input type="text" id="fullname" placeholder="Enter your full name" value={name}
+  onChange={(e) => setName(e.target.value)}
+  required
+/>
         </div>
 
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email"/>
+          <input type="email" id="email" placeholder="Enter your email" value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  required
+/>
         </div>
 
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <div className="password-field">
-            <input type="password" id="password" placeholder="Create a password"/>
+            <input type="password" id="password" placeholder="Create a password" value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  required
+/>
             <button type="button" className="eye-btn">👁️</button>
           </div>
         </div>

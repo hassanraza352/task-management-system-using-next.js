@@ -1,8 +1,19 @@
-import React from 'react'
+"use client";
 import Link from 'next/link'
+import {useAuth} from '@/context/AuthContext'
 
 function Dashboard() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log("user",user);
+
+
   return (
+
    <>
    <main className="main-content">
 
@@ -20,7 +31,7 @@ function Dashboard() {
 
     <div className="page-header">
       <h1>Dashboard</h1>
-      <p>Welcome back, Ali! Here&apos;s what&apos;s happening with your tasks.</p>
+      <p>Welcome back, {user?.name || "User"}! Here&apos;s what&apos;s happening with your tasks.</p>
     </div>
 
     <div className="stats-row">

@@ -56,7 +56,7 @@ function Setting() {
           </div>
           <div className="form-group">
             <label>Bio</label>
-            <textarea rows={3}>Productivity enthusiast. Always building and learning.</textarea>
+            <textarea  rows={3}>Productivity enthusiast. Always building and learning.</textarea>
           </div>
           <button className="btn btn-primary">Save Changes</button>
         </div>

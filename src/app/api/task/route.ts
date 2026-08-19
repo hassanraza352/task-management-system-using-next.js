@@ -15,8 +15,6 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
-
-    // Get task data
     const {
       title,
       description,
@@ -78,9 +76,50 @@ export async function GET() {
       );
     }
 
-    const tasks = await Task.find({
-      userId: user._id,
-    }).sort({ createdAt: -1 });
+    const tasks = await Task.aggregate([
+      {
+        $match: {
+          userId: user._id,
+        },
+      },
+
+      {
+        $addFields: {
+          priorityOrder: {
+            $switch: {
+              branches: [
+                {
+                  case: { $eq: ["$priority", "High"] },
+                  then: 1,
+                },
+                {
+                  case: { $eq: ["$priority", "Medium"] },
+                  then: 2,
+                },
+                {
+                  case: { $eq: ["$priority", "Low"] },
+                  then: 3,
+                },
+              ],
+              default: 4,
+            },
+          },
+        },
+      },
+
+      {
+        $sort: {
+          priorityOrder: 1,
+          dueDate: 1,
+        },
+      },
+
+      {
+        $project: {
+          priorityOrder: 0,
+        },
+      },
+    ]);
 
     return NextResponse.json({
       message: "Tasks fetched successfully",
