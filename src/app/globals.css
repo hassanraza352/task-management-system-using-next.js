@@ -523,15 +523,48 @@ ul {
   flex-wrap: wrap;
 }
 
+@property --todo {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --progress {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
 .donut {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: conic-gradient(var(--red) 0% 42%, var(--orange) 42% 75%, var(--green) 75% 100%);
+
+  background: conic-gradient(
+    var(--red) 0% var(--todo),
+    var(--orange) var(--todo) calc(var(--todo) + var(--progress)),
+    var(--green) calc(var(--todo) + var(--progress)) 100%
+  );
+
+  transition:
+    --todo 0.8s ease,
+    --progress 0.8s ease;
+
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+@keyframes donutAppear {
+  from {
+    transform: scale(0.8);
+    opacity: 0.4;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .donut::after {

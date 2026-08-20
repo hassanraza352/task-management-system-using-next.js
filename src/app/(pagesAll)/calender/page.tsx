@@ -1,7 +1,75 @@
-import React from 'react'
+'use client'
 import Link from 'next/link'
+import { useEffect, useState } from "react";
+interface Task {
+  _id: string;
+  title: string;
+  description: string;
+  priority: string;
+  status: string;
+  dueDate: string;
+  category: string;
+  tags: string[];
+}
 
 function Calender() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+const [currentDate, setCurrentDate] = useState(new Date());
+const year = currentDate.getFullYear();
+const month = currentDate.getMonth();
+
+const monthName = currentDate.toLocaleDateString("en-US", {
+  month: "long",
+  year: "numeric",
+});
+
+useEffect(() => {
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch("/api/task");
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setTasks(data.tasks);
+      }
+    } catch (error) {
+      console.error("Calendar tasks error:", error);
+    }
+  };
+
+  fetchTasks();
+}, []);
+
+const previousMonth = () => {
+  setCurrentDate(
+    new Date(year, month - 1, 1)
+  );
+};
+
+const nextMonth = () => {
+  setCurrentDate(
+    new Date(year, month + 1, 1)
+  );
+};
+const firstDay = new Date(year, month, 1).getDay();
+
+const daysInMonth = new Date(
+  year,
+  month + 1,
+  0
+).getDate();
+const calendarDays = [];
+
+for (let i = 0; i < firstDay; i++) {
+  calendarDays.push(null);
+}
+
+for (let day = 1; day <= daysInMonth; day++) {
+  calendarDays.push(day);
+}
+
   return (
    <main className="main-content">
     <div className="topbar">
@@ -20,10 +88,11 @@ function Calender() {
 
     <div className="panel">
       <div className="calendar-head">
-        <h2>May 2024</h2>
+        <h2>{monthName}</h2>
         <div className="calendar-nav">
-          <button>‹</button>
-          <button>›</button>
+         <button onClick={previousMonth}>‹</button>
+
+  <button onClick={nextMonth}>›</button>
         </div>
       </div>
 
@@ -35,15 +104,68 @@ function Calender() {
         <div className="day-name">Thu</div>
         <div className="day-name">Fri</div>
         <div className="day-name">Sat</div>
+{calendarDays.map((day, index) => {
+  if (day === null) {
+    return (
+      <div
+        key={`empty-${index}`}
+        className="calendar-cell empty"
+      ></div>
+    );
+  }
 
-        <div className="calendar-cell empty"></div>
+  const dayTasks = tasks.filter((task) => {
+    if (!task.dueDate) return false;
+
+    const taskDate = new Date(task.dueDate);
+
+    return (
+      taskDate.getFullYear() === year &&
+      taskDate.getMonth() === month &&
+      taskDate.getDate() === day
+    );
+  });
+
+  const today = new Date();
+
+  const isToday =
+    today.getFullYear() === year &&
+    today.getMonth() === month &&
+    today.getDate() === day;
+
+  return (
+    <div
+      key={day}
+      className={`calendar-cell ${isToday ? "today" : ""}`}
+    >
+      <span className="date-num">
+        {day}
+      </span>
+
+      {dayTasks.slice(0,3).map((task) => (
+        <span
+          key={task._id}
+          className={`cal-event ${
+            task.priority.toLowerCase() === "low"
+              ? "green"
+              : task.priority.toLowerCase() === "medium"
+              ? "orange"
+              : ""
+          }`}
+        >
+          {task.title}
+        </span>
+      ))}
+    </div>
+  );
+})}
+        {/* <div className="calendar-cell empty"></div>
         <div className="calendar-cell empty"></div>
         <div className="calendar-cell empty"></div>
         <div className="calendar-cell"><span className="date-num">1</span></div>
         <div className="calendar-cell"><span className="date-num">2</span></div>
         <div className="calendar-cell"><span className="date-num">3</span></div>
         <div className="calendar-cell"><span className="date-num">4</span></div>
-
         <div className="calendar-cell"><span className="date-num">5</span></div>
         <div className="calendar-cell"><span className="date-num">6</span></div>
         <div className="calendar-cell"><span className="date-num">7</span></div>
@@ -74,7 +196,7 @@ function Calender() {
         <div className="calendar-cell"><span className="date-num">29</span></div>
         <div className="calendar-cell"><span className="date-num">30</span></div>
         <div className="calendar-cell"><span className="date-num">31</span></div>
-        <div className="calendar-cell empty"></div>
+        <div className="calendar-cell empty"></div> */}
       </div>
     </div>
   </main>

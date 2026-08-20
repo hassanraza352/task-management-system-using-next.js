@@ -1,15 +1,121 @@
 "use client";
 import Link from 'next/link'
 import {useAuth} from '@/context/AuthContext'
+import { useState,useEffect} from "react";
+interface Task {
+  _id: string;
+  title: string;
+  description: string;
+  priority: string;
+  status: string;
+  dueDate: string;
+  category: string;
+  tags: string[];
+}
 
 function Dashboard() {
   const { user, loading } = useAuth();
+  const [tasks, setTasks] = useState<Task[]>([]);
+const [tasksLoading, setTasksLoading] = useState(true);
+
+
+
+  useEffect(() => {
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch("/api/task");
+
+      const data = await response.json();
+
+      console.log("Dashboard tasks:", data);
+
+      if (response.ok) {
+        setTasks(data.tasks);
+      }
+    } catch (error) {
+      console.error("Dashboard tasks error:", error);
+    } finally {
+      setTasksLoading(false);
+    }
+  };
+
+  fetchTasks();
+}, []);
+
+ const totalTasks = tasks.length;
+
+  const todoTasks = tasks.filter(
+    (task) => task.status === "Todo"
+  ).length;
+
+  const progressTasks = tasks.filter(
+    (task) => task.status === "In Progress"
+  ).length;
+
+  const completedTasks = tasks.filter(
+    (task) => task.status === "Done"
+  ).length;
+
+  const todoPercentage =
+  totalTasks > 0 ? Math.round((todoTasks / totalTasks) * 100) : 0;
+
+const progressPercentage =
+  totalTasks > 0 ? Math.round((progressTasks / totalTasks) * 100) : 0;
+
+const completedPercentage =
+  totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading ho  rhi ha ...</div>;
   }
 
-  console.log("user",user);
+const handleTaskComplete = async (task: Task) => {
+  try {
+    const response = await fetch(`/api/task/${task._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: task.title,
+        description: task.description,
+        priority: task.priority,
+        status: "Done",
+        dueDate: task.dueDate,
+        category: task.category,
+        tags: task.tags,
+      }),
+    });
+
+    const data = await response.json();
+
+    console.log("COMPLETE RESPONSE:", data);
+
+    if (!response.ok) {
+      console.error(data.message);
+      return;
+    }
+
+    setTasks((prev) =>
+      prev.map((item) =>
+        item._id === task._id ? data.task : item
+      )
+    );
+  } catch (error) {
+    console.error("Complete task error:", error);
+  }
+};
+const upcomingTasks = [...tasks]
+  .filter((task) => task.dueDate && task.status !== "Done")
+  .sort(
+    (a, b) =>
+      new Date(a.dueDate).getTime() -
+      new Date(b.dueDate).getTime()
+  )
+  .slice(0, 3);
+
 
 
   return (
@@ -37,22 +143,22 @@ function Dashboard() {
     <div className="stats-row">
       <div className="stat-card pink">
         <div className="stat-icon">🔄</div>
-        <div className="stat-value">12</div>
+        <div className="stat-value">{totalTasks}</div>
         <div className="stat-label">Total Tasks</div>
       </div>
       <div className="stat-card orange">
         <div className="stat-icon">📋</div>
-        <div className="stat-value">5</div>
+        <div className="stat-value">{todoTasks}</div>
         <div className="stat-label">To Do</div>
       </div>
       <div className="stat-card red">
         <div className="stat-icon">🔄</div>
-        <div className="stat-value">4</div>
+        <div className="stat-value">{progressTasks}</div>
         <div className="stat-label">In Progress</div>
       </div>
       <div className="stat-card dark">
         <div className="stat-icon">✔️</div>
-        <div className="stat-value">3</div>
+        <div className="stat-value">{completedTasks}</div>
         <div className="stat-label">Completed</div>
       </div>
     </div>
@@ -69,55 +175,49 @@ function Dashboard() {
             <button className="tab-btn">Done</button>
           </div>
 
-          <div className="task-item">
-            <div className="task-check"></div>
-            <div className="task-info">
-              <h4>Design landing page</h4>
-              <div className="task-meta"><span className="priority high">High Priority</span> &nbsp;•&nbsp; Due: May 20, 2024</div>
-            </div>
-            <span className="status-badge todo">To Do</span>
-            <span className="more-dots">⋮</span>
-          </div>
+         {tasks.slice(0, 5).map((task) => (
+  <div className="task-item" key={task._id}>
 
-          <div className="task-item">
-            <div className="task-check"></div>
-            <div className="task-info">
-              <h4>Implement authentication</h4>
-              <div className="task-meta"><span className="priority high">High Priority</span> &nbsp;•&nbsp; Due: May 18, 2024</div>
-            </div>
-            <span className="status-badge progress">In Progress</span>
-            <span className="more-dots">⋮</span>
-          </div>
+    <button
+  className={`task-check ${
+    task.status === "Done" ? "done" : ""
+  }`}
+  onClick={() => handleTaskComplete(task)}
+>
+  {task.status === "Done" && "✓"}
+</button>
 
-          <div className="task-item">
-            <div className="task-check"></div>
-            <div className="task-info">
-              <h4>Write API documentation</h4>
-              <div className="task-meta"><span className="priority medium">Medium Priority</span> &nbsp;•&nbsp; Due: May 25, 2024</div>
-            </div>
-            <span className="status-badge todo">To Do</span>
-            <span className="more-dots">⋮</span>
-          </div>
+    <div className="task-info">
+      <h4>{task.title}</h4>
 
-          <div className="task-item">
-            <div className="task-check done">✓</div>
-            <div className="task-info">
-              <h4>Team meeting</h4>
-              <div className="task-meta"><span className="priority low">Low Priority</span> &nbsp;•&nbsp; Due: May 17, 2024</div>
-            </div>
-            <span className="status-badge done">Done</span>
-            <span className="more-dots">⋮</span>
-          </div>
+      <div className="task-meta">
+        <span
+          className={`priority ${task.priority.toLowerCase()}`}
+        >
+          {task.priority} Priority
+        </span>
 
-          <div className="task-item">
-            <div className="task-check"></div>
-            <div className="task-info">
-              <h4>Fix responsive issues</h4>
-              <div className="task-meta"><span className="priority medium">Medium Priority</span> &nbsp;•&nbsp; Due: May 19, 2024</div>
-            </div>
-            <span className="status-badge progress">In Progress</span>
-            <span className="more-dots">⋮</span>
-          </div>
+        &nbsp;•&nbsp; Due:{" "}
+        {task.dueDate
+          ? new Date(task.dueDate).toLocaleDateString()
+          : "No due date"}
+      </div>
+    </div>
+
+    <span
+      className={`status-badge ${
+        task.status === "Todo"
+          ? "todo"
+          : task.status === "In Progress"
+          ? "in-progress"
+          : "done"
+      }`}
+    >
+      {task.status}
+    </span>
+
+  </div>
+))}
 
           <Link   href="/task" className="view-all">View all tasks →</Link>  
         </div>
@@ -128,11 +228,16 @@ function Dashboard() {
         <div className="panel">
           <div className="panel-title">Task by Status</div>
           <div className="donut-wrap">
-            <div className="donut"></div>
+            <div className="donut" style={{
+    "--todo": `${todoPercentage}%`,
+    "--progress": `${progressPercentage}%`,
+    "--done": `${completedPercentage}%`,
+  } as React.CSSProperties}
+  ></div>
             <div className="legend">
-              <div className="legend-item"><span className="legend-dot red"></span> To Do <strong>5 (42%)</strong></div>
-              <div className="legend-item"><span className="legend-dot orange"></span> In Progress <strong>4 (33%)</strong></div>
-              <div className="legend-item"><span className="legend-dot green"></span> Done <strong>3 (25%)</strong></div>
+              <div className="legend-item"><span className="legend-dot red"></span> To Do <strong>{todoTasks} ({todoPercentage}%)</strong></div>
+              <div className="legend-item"><span className="legend-dot orange"></span> In Progress <strong>{progressTasks} ({progressPercentage}%)</strong></div>
+              <div className="legend-item"><span className="legend-dot green"></span> Done <strong>{completedTasks} ({completedPercentage}%)</strong></div>
             </div>
           </div>
         </div>
@@ -140,26 +245,32 @@ function Dashboard() {
         <div className="panel">
           <div className="panel-title">Upcoming Tasks</div>
 
-          <div className="upcoming-item">
-            <span className="date-chip">May 17</span>
-            <span className="u-title">Team meeting</span>
-            <span className="pill low">Low</span>
-          </div>
-          <div className="upcoming-item">
-            <span className="date-chip">May 18</span>
-            <span className="u-title">Implement authentication</span>
-            <span className="pill high">High</span>
-          </div>
-          <div className="upcoming-item">
-            <span className="date-chip">May 19</span>
-            <span className="u-title">Fix responsive issues</span>
-            <span className="pill medium">Medium</span>
-          </div>
+        {upcomingTasks.map((task) => (
+  <div className="upcoming-item" key={task._id}>
+
+    <span className="date-chip">
+      {new Date(task.dueDate).toLocaleDateString([], {
+        month: "short",
+        day: "numeric",
+      })}
+    </span>
+
+    <span className="u-title">
+      {task.title}
+    </span>
+
+    <span className={`pill ${task.priority.toLowerCase()}`}>
+      {task.priority}
+    </span>
+
+  </div>
+))}
 
           <Link   href="/calender" className="view-all">View calendar →</Link>  
         </div>
       </div>
     </div>
+
 
   </main>
    
