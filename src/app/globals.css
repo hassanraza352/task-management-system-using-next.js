@@ -2021,7 +2021,8 @@ ul {
   color: var(--text-main);
   letter-spacing: 0.5px;
   background: linear-gradient(90deg, #ffffff, #e6193c);
-  -webkit-background-clip: text;
+-webkit-background-clip: text;
+background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import jsPDF from "jspdf";
+import Image from "next/image"
 interface Task {
   _id: string;
   title: string;
@@ -488,13 +489,12 @@ function Profile() {
           href="/profile"
           className="profile-chip"
         >
-          <img
-            src={
-              user?.profilePic ||
-              "/default-profile.png"
-            }
-            alt={user?.name || "Profile"}
-          />
+          <Image
+    src={user?.profilePic || "/default.jpg"}
+    alt={user?.name || "User"}
+    width={40}
+    height={40}
+  />
 
           ▾
         </Link>
@@ -527,13 +527,16 @@ function Profile() {
 
         <div className="profile-avatar-wrap">
 
-          <img
+          <Image
             src={
               preview ||
               user?.profilePic ||
-              "/default-profile.png"
+              "/default-profile.jpg"
             }
             alt={user?.name || "Profile"}
+            width={40}
+            height={40}
+            loading="eager"
           />
 
 

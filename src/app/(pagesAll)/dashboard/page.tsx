@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {useAuth} from '@/context/AuthContext'
 import { useState,useEffect} from "react";
 import Loading from "@/app/(pagesAll)/dashboard/loading";
+import Image from "next/image"
 
 interface Task {
   _id: string;
@@ -126,7 +127,12 @@ const upcomingTasks = [...tasks]
    <main className="main-content">
 
      <div  className="topbar">
-     <Link href="/profile"  className="profile-chip"> <img src={user?.profilePic} alt={user?.name}/> ▾</Link>
+     <Link href="/profile"  className="profile-chip">  <Image
+    src={user?.profilePic || "/default.jpg"}
+    alt={user?.name || "User"}
+    width={40}
+    height={40}
+  /> ▾</Link>
     </div>
 
     <div className="page-header">

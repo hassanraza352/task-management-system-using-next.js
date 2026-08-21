@@ -42,8 +42,7 @@ function Login() {
       }
 
       // Login successful
-      window.location.href = "/dashboard";
-
+      router.push("/dashboard")
     } catch (error) {
       console.error("Login error:", error);
       setError("Something went wrong. Please try again.");
@@ -200,8 +199,7 @@ function Login() {
             className="btn-google"
             disabled={isLoading}
             onClick={() => {
-              window.location.href =
-                "/api/auth/google";
+              router.push("/api/auth/google");              
             }}
           >
             <span className="google-g">G</span>

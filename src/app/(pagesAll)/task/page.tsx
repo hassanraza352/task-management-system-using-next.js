@@ -4,6 +4,7 @@ import {useEffect,useState} from "react"
 import AddNewTask from '@/component/AddNewTask'
 import UpdateTask from '@/component/UpdateTask'
 import { useAuth } from '@/context/AuthContext'
+import Image from "next/image"
 interface Task {
   _id: string;
   title: string;
@@ -106,7 +107,13 @@ const DeleteTask = async (taskId: string) => {
   return (
     <main  className="main-content">
     <div  className="topbar">
-     <Link href="/profile"  className="profile-chip"> <img src={user?.profilePic}/> ▾</Link>
+     <Link href="/profile"  className="profile-chip"> <Image
+    src={user?.profilePic || "/default.png"}
+    alt={user?.name || "User"}
+    width={40}
+    height={40}
+    loading="eager"
+  /> ▾</Link>
     </div>
 
     <div  className="page-header">

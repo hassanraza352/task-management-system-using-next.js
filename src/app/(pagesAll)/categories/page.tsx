@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image"
 
 interface Task {
   _id: string;
@@ -13,7 +14,7 @@ interface Task {
 
 function Categories() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [search, setSearch] = useState("");
+  const [search] = useState("");
   const [loading, setLoading] = useState(true);
   const {user} =useAuth()
 
@@ -65,7 +66,12 @@ function Categories() {
     <main className="main-content">
 
        <div  className="topbar">
-     <Link href="/profile"  className="profile-chip"> <img src={user?.profilePic}/> ▾</Link>
+     <Link href="/profile"  className="profile-chip">  <Image
+    src={user?.profilePic || "/default.jpg"}
+    alt={user?.name || "User"}
+    width={40}
+    height={40}
+  /> ▾</Link>
     </div>
 
 
