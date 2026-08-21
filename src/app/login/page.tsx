@@ -1,117 +1,218 @@
-'use client'
+"use client";
 
-import React from 'react'
+import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
-import {useState} from 'react'
+import { useRouter } from "next/navigation";
 
 function Login() {
   const router = useRouter();
+
   const [email, setEmail] = useState("");
-const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
 
-const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  try {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    setIsLoading(true);
+    setError("");
 
-    const data = await response.json();
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-    console.log("data is hereeeeee",data);
+      const data = await response.json();
 
-    if (response.ok) {
+      console.log("data is hereeeeee", data);
+
+      if (!response.ok) {
+        setError(data.message || "Login failed");
+        return;
+      }
+
+      // Login successful
       window.location.href = "/dashboard";
+
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-
-  } catch (error) {
-    console.error("Login error:", error);
-  }
-};
-
+  };
 
   return (
-   <div className="auth-wrapper">
-  <div className="auth-card">
+    <div className="auth-wrapper">
+      <div className="auth-card">
 
-    {/* <!-- Left visual panel --> */}
-    <div className="auth-visual">
-      <div className="auth-logo-icon">🌶️</div>
-      <h2>Welcome back!</h2>
-      <p>Sign in to continue managing your tasks.</p>
+        {/* Left visual panel */}
+        <div className="auth-visual">
+          <div className="auth-logo-icon">🌶️</div>
 
-      <div className="task-illustration">
-        <div className="illustration-row">
-          <span className="illustration-check">✓</span>
-          <span className="illustration-line"></span>
+          <h2>Welcome back!</h2>
+
+          <p>
+            Sign in to continue managing your tasks.
+          </p>
+
+          <div className="task-illustration">
+
+            <div className="illustration-row">
+              <span className="illustration-check">✓</span>
+              <span className="illustration-line"></span>
+            </div>
+
+            <div className="illustration-row">
+              <span className="illustration-check">✓</span>
+              <span className="illustration-line"></span>
+            </div>
+
+            <div className="illustration-row">
+              <span className="illustration-check">✓</span>
+              <span className="illustration-line"></span>
+            </div>
+
+            <div className="illustration-badge">✓</div>
+
+          </div>
+
+          <div className="auth-wave-circle2"></div>
+          <div className="auth-wave-circle"></div>
         </div>
-        <div className="illustration-row">
-          <span className="illustration-check">✓</span>
-          <span className="illustration-line"></span>
+
+        {/* Right form panel */}
+        <div className="auth-form-side">
+
+          <h1>Sign in to your account</h1>
+
+          <p className="auth-sub">
+            New here?{" "}
+            <Link href="/register">
+              Create an account
+            </Link>
+          </p>
+
+          <form
+            onSubmit={handleLogin}
+            className="auth-form"
+          >
+
+            <div className="form-group">
+              <label htmlFor="email">
+                Email
+              </label>
+
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="form-group">
+
+              <div className="label-row">
+
+                <label htmlFor="password">
+                  Password
+                </label>
+
+                <Link
+                  href="#"
+                  className="forgot-link"
+                >
+                  Forgot password?
+                </Link>
+
+              </div>
+
+              <div className="password-field">
+
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
+                  disabled={isLoading}
+                />
+
+                <button
+                  type="button"
+                  className="eye-btn"
+                  disabled={isLoading}
+                >
+                  👁️
+                </button>
+
+              </div>
+            </div>
+
+            {/* Error message */}
+            {error && (
+              <p className="auth-error">
+                {error}
+              </p>
+            )}
+
+            {/* Login button */}
+            <button
+              type="submit"
+              className="btn btn-primary auth-submit-btn"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <span className="login-spinner"></span>
+                  Signing in...
+                </>
+              ) : (
+                "Sign in"
+              )}
+            </button>
+
+          </form>
+
+          <div className="or-divider">
+            or continue with
+          </div>
+
+          <button
+            type="button"
+            className="btn-google"
+            disabled={isLoading}
+            onClick={() => {
+              window.location.href =
+                "/api/auth/google";
+            }}
+          >
+            <span className="google-g">G</span>
+            Sign in with Google
+          </button>
+
         </div>
-        <div className="illustration-row">
-          <span className="illustration-check">✓</span>
-          <span className="illustration-line"></span>
-        </div>
-        <div className="illustration-badge">✓</div>
+
       </div>
-
-      <div className="auth-wave-circle2"></div>
-      <div className="auth-wave-circle"></div>
     </div>
-
-    {/* <!-- Right form panel --> */}
-    <div className="auth-form-side">
-      <h1>Sign in to your account</h1>
-      <p className="auth-sub">New here? <Link   href="/register">Create an account</Link>  </p>
-
-       <form onSubmit={handleLogin} method="POST" className="auth-form"> 
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email" value={email}   onChange={(e) => setEmail(e.target.value)}/>
-        </div>
-
-        <div className="form-group">
-          <div className="label-row">
-            <label htmlFor="password">Password</label>
-            <Link   href="#" className="forgot-link">Forgot password?</Link>  
-          </div>
-          <div className="password-field">
-            <input type="password" id="password" placeholder="Enter your password" value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
-            <button type="button" className="eye-btn">👁️</button>
-          </div>
-        </div>
-
-        <button className="btn btn-primary auth-submit-btn">Sign in</button>
-       </form> 
-
-      <div className="or-divider">or continue with</div>
-
-    <button
-  type="button"
-  className="btn-google"
-  onClick={() => {
-    window.location.href = "/api/auth/google";
-  }}
->
-  <span className="google-g">G</span> Sign in with Google
-</button>
-    </div>
-
-  </div>
-</div>
-  )
+  );
 }
 
-export default Login
+export default Login;

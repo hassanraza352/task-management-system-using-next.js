@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import {useAuth} from '@/context/AuthContext'
 import { useState,useEffect} from "react";
+import Loading from "@/app/(pagesAll)/dashboard/loading";
 
 interface Task {
   _id: string;
@@ -68,9 +69,9 @@ const completedPercentage =
 
 
 
-  if (loading) {
-    return <div>Loading ho  rhi ha ...</div>;
-  }
+ if (loading || tasksLoading) {
+  return <Loading />;
+}
 
 const handleTaskComplete = async (task: Task) => {
   try {
