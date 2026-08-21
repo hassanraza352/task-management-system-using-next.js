@@ -23,7 +23,7 @@ const userSchema = new Schema(
 
     profilePic: {
       type: String,
-      default: "",
+      default: "/default.jpg",
     },
 
     isVerified: {

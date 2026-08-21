@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {useEffect,useState} from "react"
 import AddNewTask from '@/component/AddNewTask'
 import UpdateTask from '@/component/UpdateTask'
+import { useAuth } from '@/context/AuthContext'
 interface Task {
   _id: string;
   title: string;
@@ -21,6 +22,7 @@ function Task() {
 const [showMenu, setShowMenu] = useState<string | null>(null);
 const[showUpdateTask ,setshowUpdateTask]=useState(false);
 const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+const {user} =useAuth();
 
 
 
@@ -104,7 +106,7 @@ const DeleteTask = async (taskId: string) => {
   return (
     <main  className="main-content">
     <div  className="topbar">
-     <Link href="/profile"  className="profile-chip"> <img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</Link>
+     <Link href="/profile"  className="profile-chip"> <img src={user?.profilePic}/> ▾</Link>
     </div>
 
     <div  className="page-header">

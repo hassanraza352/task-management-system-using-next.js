@@ -842,7 +842,7 @@ ul {
 .toggle-row h4 { font-size: 14.5px; margin-bottom: 3px; }
 .toggle-row p { font-size: 13px; color: var(--text-gray); }
 
-.switch { width: 44px; height: 24px; border-radius: 20px; background: var(--border); position: relative; cursor: pointer; flex-shrink: 0; }
+.switch { width: 44px; height: 24px; border-radius: 10px; background: var(--red); position: relative; cursor: pointer; flex-shrink: 0; }
 .switch.on { background: var(--red); }
 .switch::after {
   content: "";

@@ -3,6 +3,18 @@
 import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import jsPDF from "jspdf";
+interface Task {
+  _id: string;
+  title: string;
+  description: string;
+  priority: string;
+  status: string;
+  dueDate: string;
+  category: string;
+  tags: string[];
+  createdAt:string;
+}
 
 function Profile() {
   const { user, updateUser } = useAuth();
@@ -175,6 +187,293 @@ function Profile() {
       setUploading(false);
     }
   };
+
+  const handleDownloadReport = async () => {
+  try {
+    const response = await fetch("/api/task", {
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message || "Failed to fetch tasks");
+      return;
+    }
+
+    const allTasks = data.tasks || [];
+
+    // Last 30 days
+    const today = new Date();
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+
+    // Sirf last 30 days mein created tasks
+    const tasks = allTasks.filter((task: Task) => {
+      const createdDate = new Date(task.createdAt);
+
+      return (
+        createdDate >= thirtyDaysAgo &&
+        createdDate <= today
+      );
+    });
+
+    // =========================
+    // Statistics
+    // =========================
+
+    const totalTasks = tasks.length;
+
+    const completedTasks = tasks.filter(
+      (task: Task) => task.status === "Done"
+    ).length;
+
+    const inProgressTasks = tasks.filter(
+      (task: Task) => task.status === "In Progress"
+    ).length;
+
+    const todoTasks = tasks.filter(
+      (task: Task) => task.status === "Todo"
+    ).length;
+
+    const highPriority = tasks.filter(
+      (task: Task) => task.priority === "High"
+    ).length;
+
+    const mediumPriority = tasks.filter(
+      (task: Task) => task.priority === "Medium"
+    ).length;
+
+    const lowPriority = tasks.filter(
+      (task: Task) => task.priority === "Low"
+    ).length;
+
+    // Overdue
+    const overdueTasks = tasks.filter((task: Task) => {
+      if (!task.dueDate || task.status === "Done") {
+        return false;
+      }
+
+      return new Date(task.dueDate) < today;
+    }).length;
+
+    // =========================
+    // Category summary
+    // =========================
+
+    const categoryCount: Record<string, number> = {};
+
+    tasks.forEach((task: Task) => {
+      const category = task.category?.trim() || "Uncategorized";
+
+      categoryCount[category] =
+        (categoryCount[category] || 0) + 1;
+    });
+
+    // =========================
+    // Create PDF
+    // =========================
+
+    const doc = new jsPDF();
+
+    // Title
+    doc.setFontSize(20);
+    doc.text("Task Management Report", 20, 20);
+
+    // Report period
+    doc.setFontSize(11);
+
+    const formatDate = (date: Date) => {
+      return date.toLocaleDateString();
+    };
+
+    doc.text(
+      `Report Period: ${formatDate(thirtyDaysAgo)} - ${formatDate(today)}`,
+      20,
+      30
+    );
+
+    doc.text(
+      `Generated: ${formatDate(today)}`,
+      20,
+      37
+    );
+
+    // =========================
+    // Summary
+    // =========================
+
+    doc.setFontSize(15);
+    doc.text("Summary", 20, 52);
+
+    doc.setFontSize(11);
+
+    let y = 62;
+
+    doc.text(`Total Tasks: ${totalTasks}`, 25, y);
+    y += 8;
+
+    doc.text(`Completed: ${completedTasks}`, 25, y);
+    y += 8;
+
+    doc.text(`In Progress: ${inProgressTasks}`, 25, y);
+    y += 8;
+
+    doc.text(`Todo: ${todoTasks}`, 25, y);
+    y += 8;
+
+    doc.text(`Overdue: ${overdueTasks}`, 25, y);
+
+    // =========================
+    // Priority
+    // =========================
+
+    y += 18;
+
+    doc.setFontSize(15);
+    doc.text("Priority Summary", 20, y);
+
+    y += 10;
+
+    doc.setFontSize(11);
+
+    doc.text(`High: ${highPriority}`, 25, y);
+    y += 8;
+
+    doc.text(`Medium: ${mediumPriority}`, 25, y);
+    y += 8;
+
+    doc.text(`Low: ${lowPriority}`, 25, y);
+
+    // =========================
+    // Categories
+    // =========================
+
+    y += 18;
+
+    doc.setFontSize(15);
+    doc.text("Category Summary", 20, y);
+
+    y += 10;
+
+    doc.setFontSize(11);
+
+    Object.entries(categoryCount).forEach(
+      ([category, count]) => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+
+        doc.text(`${category}: ${count} task(s)`, 25, y);
+
+        y += 8;
+      }
+    );
+
+    // =========================
+    // Task Details
+    // =========================
+
+    doc.addPage();
+
+    doc.setFontSize(15);
+    doc.text("Task Details", 20, 20);
+
+    y = 32;
+
+    doc.setFontSize(10);
+
+    if (tasks.length === 0) {
+      doc.text(
+        "No tasks were created during the last 30 days.",
+        20,
+        y
+      );
+    }
+
+    tasks.forEach((task: Task, index: number) => {
+      if (y > 260) {
+        doc.addPage();
+        y = 20;
+      }
+
+      doc.setFontSize(11);
+
+      doc.text(
+        `${index + 1}. ${task.title}`,
+        20,
+        y
+      );
+
+      y += 7;
+
+      doc.setFontSize(9);
+
+      doc.text(
+        `Status: ${task.status}`,
+        25,
+        y
+      );
+
+      y += 6;
+
+      doc.text(
+        `Priority: ${task.priority}`,
+        25,
+        y
+      );
+
+      y += 6;
+
+      doc.text(
+        `Category: ${task.category || "Uncategorized"}`,
+        25,
+        y
+      );
+
+      y += 6;
+
+      doc.text(
+        `Created: ${
+          task.createdAt
+            ? formatDate(new Date(task.createdAt))
+            : "N/A"
+        }`,
+        25,
+        y
+      );
+
+      y += 6;
+
+      doc.text(
+        `Due: ${
+          task.dueDate
+            ? formatDate(new Date(task.dueDate))
+            : "N/A"
+        }`,
+        25,
+        y
+      );
+
+      y += 12;
+    });
+
+    // =========================
+    // Download
+    // =========================
+
+    doc.save(
+      `Task-Report-${today
+        .toISOString()
+        .split("T")[0]}.pdf`
+    );
+  } catch (error) {
+    console.error("Report generation error:", error);
+    alert("Failed to generate report");
+  }
+};
 
   return (
     <main className="main-content">
@@ -549,7 +848,7 @@ function Profile() {
 
             </div>
 
-            <div className="switch"></div>
+            <button className="switch" onClick={handleDownloadReport}></button>
 
           </div>
 

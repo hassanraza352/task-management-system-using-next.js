@@ -98,9 +98,15 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 
       <div className="or-divider">or continue with</div>
 
-      <button type="button" className="btn-google">
-        <span className="google-g">G</span> Sign in with Google
-      </button>
+    <button
+  type="button"
+  className="btn-google"
+  onClick={() => {
+    window.location.href = "/api/auth/google";
+  }}
+>
+  <span className="google-g">G</span> Sign in with Google
+</button>
     </div>
 
   </div>
