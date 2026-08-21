@@ -26,7 +26,7 @@ const currentPath = usePathname();
       <Link   href="/task" className={currentPath==="/task" ? "active":" "}><span className="icon">✅</span> My Tasks</Link>
       <Link   href="/categories" className={currentPath==="/categories" ? "active":" "}><span className="icon">🗂️</span> Categories</Link>
       <Link   href="/calender" className={currentPath==="/calender" ? "active":" "}><span className="icon">📅</span> Calendar</Link>
-      <Link   href="/settingPage" className={currentPath==="/settingPage" ? "active":" "}><span className="icon">⚙️</span> Settings</Link>
+      <Link   href="/profile" className={currentPath==="/profile" ? "active":" "}><span className="icon">⚙️</span> Settings</Link>
   </nav>
     </div>
     
@@ -35,7 +35,7 @@ const currentPath = usePathname();
       <Link   href="/task" className={currentPath==="/task" ? "active":" "}><span className="icon">✅</span> My Tasks</Link>
       <Link   href="/categories" className={currentPath==="/categories" ? "active":" "}><span className="icon">🗂️</span> Categories</Link>
       <Link   href="/calender" className={currentPath==="/calender" ? "active":" "}><span className="icon">📅</span> Calendar</Link>
-      <Link   href="/settingPage" className={currentPath==="/settingPage" ? "active":" "}><span className="icon">⚙️</span> Settings</Link>
+      <Link   href="/profile" className={currentPath==="/profile" ? "active":" "}><span className="icon">⚙️</span> Settings</Link>
     </nav>
    <button className="new-task-btn" onClick={logout}>Logout</button> 
     <div className="sidebar-wave"></div>

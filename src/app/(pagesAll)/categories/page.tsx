@@ -1,75 +1,174 @@
-import React from 'react'
-import Link from 'next/link'
-function Categories() {
-  return (
-    <main className="main-content">
-    <div className="topbar">
-      <div className="search-box">🔍 <input type="text" placeholder="Search categories..."/> <kbd>⌘ K</kbd></div>
-      <div className="topbar-actions">
-        <div className="icon-btn">🔔<span className="dot">2</span></div>
-        <div className="icon-btn">☀️</div>
-        <Link   href="/profile" className="profile-chip"><img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</Link>  
-      </div>
-    </div>
+"use client";
 
-    <div className="page-header">
-      <h1>Categories</h1>
-      <p>Organize your tasks by category.</p>
-    </div>
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
-    <div className="category-grid">
-
-      <div className="category-card">
-        <div className="cat-icon" style={{background:"#e0342e"}}>🎨</div>
-        <h3>Design</h3>
-        <p>UI/UX and visual design tasks</p>
-        <div className="cat-bar"><div className="cat-bar-fill" style={{width:"60%",background:"#e0342e"}}></div></div>
-        <div className="cat-footer"><span>3 of 5 done</span><span>60%</span></div>
-      </div>
-
-      <div className="category-card">
-        <div className="cat-icon" style={{background:"#f59e0b"}}>💻</div>
-        <h3>Development</h3>
-        <p>Coding and implementation tasks</p>
-        <div className="cat-bar"><div className="cat-bar-fill" style={{width:"40%",background:"#f59e0b"}}></div></div>
-        <div className="cat-footer"><span>2 of 5 done</span><span>40%</span></div>
-      </div>
-
-      <div className="category-card">
-        <div className="cat-icon" style={{background:"#22c55e"}}>📢</div>
-        <h3>Marketing</h3>
-        <p>Campaigns and content tasks</p>
-        <div className="cat-bar"><div className="cat-bar-fill" style={{width:"80%",background:"#22c55e"}}></div></div>
-        <div className="cat-footer"><span>4 of 5 done</span><span>80%</span></div>
-      </div>
-
-      <div className="category-card">
-        <div className="cat-icon" style={{background:"#6e0f13"}}>📞</div>
-        <h3>Meetings</h3>
-        <p>Calls, standups and reviews</p>
-        <div className="cat-bar"><div className="cat-bar-fill" style={{ width: "100%", background: "#6e0f13",}}></div></div>
-        <div className="cat-footer"><span>3 of 3 done</span><span>100%</span></div>
-      </div>
-
-      <div className="category-card">
-        <div className="cat-icon" style={{background:"#0ea5e9"}}>📄</div>
-        <h3>Documentation</h3>
-        <p>Docs, guides and reports</p>
-        <div className="cat-bar"><div className="cat-bar-fill" style={{ width: "20%", background: "#0ea5e9",}}></div></div>
-        <div className="cat-footer"><span>1 of 5 done</span><span>20%</span></div>
-      </div>
-
-      <div className="category-card">
-        <div className="cat-icon" style={{background:"#9333ea"}}>🧪</div>
-        <h3>Testing</h3>
-        <p>QA and bug fixing tasks</p>
-        <div className="cat-bar"><div className="cat-bar-fill" style={{width:"50%",background:"#9333ea"}}></div></div>
-        <div className="cat-footer"><span>2 of 4 done</span><span>50%</span></div>
-      </div>
-
-    </div>
-  </main>
-  )
+interface Task {
+  _id: string;
+  title: string;
+  category?: string;
+  status: string;
 }
 
-export default Categories
+function Categories() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const {user} =useAuth()
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch("/api/task", {
+          credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setTasks(data.tasks || data);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
+  // Same category wale tasks ko group karna
+  const groupedCategories = tasks.reduce(
+    (acc: Record<string, Task[]>, task) => {
+      if (!task.category) return acc;
+
+      if (!acc[task.category]) {
+        acc[task.category] = [];
+      }
+
+      acc[task.category].push(task);
+
+      return acc;
+    },
+    {}
+  );
+
+  // Search
+  const filteredCategories = Object.entries(groupedCategories).filter(
+    ([categoryName]) =>
+      categoryName.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <main className="main-content">
+
+       <div  className="topbar">
+     <Link href="/profile"  className="profile-chip"> <img src={user?.profilePic}/> ▾</Link>
+    </div>
+
+
+      <div className="page-header">
+
+        <h1>Categories</h1>
+
+        <p>
+          Organize your tasks by category.
+        </p>
+
+      </div>
+
+
+      <div className="category-grid">
+
+        {loading ? (
+
+          <p>Loading categories...</p>
+
+        ) : filteredCategories.length === 0 ? (
+
+          <p>No categories found.</p>
+
+        ) : (
+
+          filteredCategories.map(
+            ([categoryName, categoryTasks]) => {
+
+              const total = categoryTasks.length;
+
+              const completed = categoryTasks.filter(
+                (task) => task.status === "Done"
+              ).length;
+
+              const percentage =
+                total === 0
+                  ? 0
+                  : Math.round(
+                      (completed / total) * 100
+                    );
+
+              return (
+
+                <Link href={`/categories/${encodeURIComponent(categoryName)}`}
+                  className="category-card"
+                  key={categoryName}
+                >
+
+                  <div
+                    className="cat-icon"
+                    style={{
+                      background: "#581519",
+                    }}
+                  >
+                    📁
+                  </div>
+
+                  <h3>
+                    {categoryName}
+                  </h3>
+
+                  <p>
+                    {total} task
+                    {total !== 1 ? "s" : ""} in this category
+                  </p>
+
+                  <div className="cat-bar">
+
+                    <div
+                      className="cat-bar-fill"
+                      style={{
+                        width: `${percentage}%`,
+                        background: "#bd0e1a",
+                      }}
+                    />
+
+                  </div>
+
+                  <div className="cat-footer">
+
+                    <span>
+                      {completed} of {total} done
+                    </span>
+
+                    <span>
+                      {percentage}%
+                    </span>
+
+                  </div>
+
+                </Link>
+
+              );
+            }
+          )
+
+        )}
+
+      </div>
+
+    </main>
+  );
+}
+
+export default Categories;

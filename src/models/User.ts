@@ -41,6 +41,20 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
+   bio:{
+    type:String,
+    default:"hy i am new user"
+   },
+   role:{
+    type:String,
+    default:"user"
+   },
+   phone:{
+    type:String,
+    default:"+92XXXXXXXXX"
+   }
+   
+
   },
   {
     timestamps: true,

@@ -83,15 +83,28 @@ const handleTaskComplete = async (task: Task) => {
     console.error("Complete task error:", error);
   }
 };
+const DeleteTask = async (taskId: string) => {
+  try {
+    const response = await fetch(`/api/task/${taskId}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
+    console.log("DELETE RESPONSE:", data);
+    if (!response.ok) {
+      console.error(data.message);
+      return;
+    }
+    setTasks((prev) => prev.filter((task) => task._id !== taskId));
+  } catch (error) {
+    console.error("Delete task error:", error);
+  }
+
+
+}
   return (
     <main  className="main-content">
     <div  className="topbar">
-      <div  className="search-box">🔍 <input type="text" placeholder="Search tasks..."/> <kbd>⌘ K</kbd></div>
-      <div  className="topbar-actions">
-        <div  className="icon-btn">🔔<span  className="dot">2</span></div>
-        <div  className="icon-btn">☀️</div>
-        <Link href="profile.html"  className="profile-chip"> <img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</Link>
-      </div>
+     <Link href="/profile"  className="profile-chip"> <img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</Link>
     </div>
 
     <div  className="page-header">
@@ -106,7 +119,6 @@ const handleTaskComplete = async (task: Task) => {
   }}
 />
 )}
-
       <p>All your tasks in one place — 12 total.</p>
 
     </div>
@@ -132,7 +144,7 @@ const handleTaskComplete = async (task: Task) => {
 </button>
     
 
-    <div className="task-info">
+    <div className="task-info" title={task.description}>
       <h4>{task.title}</h4>
 
       <div className="task-meta">
@@ -174,7 +186,13 @@ const handleTaskComplete = async (task: Task) => {
   Update
 </button>
           
-          <button>
+          <button onClick={()=>{
+            console.log("DELETE CLICKED:", task);
+            DeleteTask(task._id);
+             setShowMenu(null);
+
+
+          }}>
             Delete
           </button>
 

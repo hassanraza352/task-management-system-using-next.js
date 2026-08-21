@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import {useAuth} from '@/context/AuthContext'
 import { useState,useEffect} from "react";
+
 interface Task {
   _id: string;
   title: string;
@@ -123,16 +124,8 @@ const upcomingTasks = [...tasks]
    <>
    <main className="main-content">
 
-    <div className="topbar">
-      <div className="search-box">🔍 <input type="text" placeholder="Search tasks..."/> <kbd>⌘ K</kbd></div>
-      <div className="topbar-actions">
-        <div className="icon-btn">🔔<span className="dot">2</span></div>
-        <div className="icon-btn">☀️</div>
-        <Link   href="/profile" className="profile-chip">
-          <img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/>
-          ▾
-        </Link>  
-      </div>
+     <div  className="topbar">
+     <Link href="/profile"  className="profile-chip"> <img src={user?.profilePic} alt={user?.name}/> ▾</Link>
     </div>
 
     <div className="page-header">
@@ -187,7 +180,7 @@ const upcomingTasks = [...tasks]
   {task.status === "Done" && "✓"}
 </button>
 
-    <div className="task-info">
+    <div className="task-info" title={task.description}>
       <h4>{task.title}</h4>
 
       <div className="task-meta">
@@ -255,7 +248,7 @@ const upcomingTasks = [...tasks]
       })}
     </span>
 
-    <span className="u-title">
+    <span className="u-title" title={task.description}>
       {task.title}
     </span>
 

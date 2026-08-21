@@ -37,13 +37,16 @@ const hashedPassword = await bcrypt.hash(password, 10);
    return NextResponse.json(
   {
     message: "User registered successfully",
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      profilePic: user.profilePic,
-      isVerified: user.isVerified,
-    },
+   user: {
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  profilePic: user.profilePic,
+  isVerified: user.isVerified,
+  bio: user.bio,
+  role: user.role,
+  phone: user.phone,
+},
   },
   { status: 201 }
 );

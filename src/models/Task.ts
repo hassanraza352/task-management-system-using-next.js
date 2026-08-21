@@ -36,6 +36,7 @@ const taskSchema = new Schema(
       type: String,
       default: "",
       trim: true,
+      lowercase: true,
     },
 
     tags: {

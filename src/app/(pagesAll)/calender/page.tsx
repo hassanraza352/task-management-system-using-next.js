@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useEffect, useState } from "react";
+import {useAuth} from '@/context/AuthContext'
 interface Task {
   _id: string;
   title: string;
@@ -18,7 +19,7 @@ function Calender() {
 const [currentDate, setCurrentDate] = useState(new Date());
 const year = currentDate.getFullYear();
 const month = currentDate.getMonth();
-
+  const { user, loading } = useAuth();
 const monthName = currentDate.toLocaleDateString("en-US", {
   month: "long",
   year: "numeric",
@@ -72,13 +73,8 @@ for (let day = 1; day <= daysInMonth; day++) {
 
   return (
    <main className="main-content">
-    <div className="topbar">
-      <div className="search-box">🔍 <input type="text" placeholder="Search tasks..."/> <kbd>⌘ K</kbd></div>
-      <div className="topbar-actions">
-        <div className="icon-btn">🔔<span className="dot">2</span></div>
-        <div className="icon-btn">☀️</div>
-        <Link   href="/profile" className="profile-chip"><img src="https://i.pravatar.cc/64?img=13" alt="Ali Raza"/> ▾</Link>  
-      </div>
+     <div  className="topbar">
+     <Link href="/profile"  className="profile-chip"> <img src={user?.profilePic} />▾</Link>
     </div>
 
     <div className="page-header">
