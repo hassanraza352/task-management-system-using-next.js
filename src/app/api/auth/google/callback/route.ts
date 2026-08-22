@@ -114,7 +114,8 @@ export async function GET(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Google OAuth error:", error);
 
     return NextResponse.json(

@@ -30,7 +30,6 @@ const [tasksLoading, setTasksLoading] = useState(true);
 
       const data = await response.json();
 
-      console.log("Dashboard tasks:", data);
 
       if (response.ok) {
         setTasks(data.tasks);

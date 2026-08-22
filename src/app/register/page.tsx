@@ -13,7 +13,6 @@ function Register() {
   const [error, setError] = useState("");
 
   const router = useRouter();
-
   const handleRegister = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -36,8 +35,6 @@ function Register() {
       });
 
       const data = await response.json();
-
-      console.log(data);
 
       if (!response.ok) {
         setError(data.message || "Registration failed");
@@ -236,16 +233,16 @@ function Register() {
 
           {/* Google */}
           <button
-            type="button"
-            className="btn-google"
-            disabled={isLoading}
-          >
-            <span className="google-g">
-              G
-            </span>
-
-            Sign up with Google
-          </button>
+  type="button"
+  className="btn-google"
+  disabled={isLoading}
+  onClick={() => {
+    window.location.href = "/api/auth/google";
+  }}
+>
+  <span className="google-g">G</span>
+  Sign in with Google
+</button>
 
           <p className="auth-terms">
             By signing up, you agree to our{" "}

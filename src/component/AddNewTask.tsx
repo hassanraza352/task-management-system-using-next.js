@@ -49,14 +49,12 @@ const handleSubmit = async () => {
 
     const data = await response.json();
 
-    console.log("ADD TASK RESPONSE:", data);
 
     if (!response.ok) {
       console.log("Request failed:", data.message);
       return;
     }
 
-    console.log("Task created successfully");
 
     onTaskAdded(data.task);
     onClose();
@@ -195,3 +193,4 @@ const handleSubmit = async () => {
     </div>
   );
 }
+

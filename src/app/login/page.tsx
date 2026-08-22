@@ -34,7 +34,6 @@ function Login() {
 
       const data = await response.json();
 
-      console.log("data is hereeeeee", data);
 
       if (!response.ok) {
         setError(data.message || "Login failed");
@@ -194,17 +193,17 @@ function Login() {
             or continue with
           </div>
 
-          <button
-            type="button"
-            className="btn-google"
-            disabled={isLoading}
-            onClick={() => {
-              router.push("/api/auth/google");              
-            }}
-          >
-            <span className="google-g">G</span>
-            Sign in with Google
-          </button>
+         <button
+  type="button"
+  className="btn-google"
+  disabled={isLoading}
+  onClick={() => {
+    window.location.href = "/api/auth/google";
+  }}
+>
+  <span className="google-g">G</span>
+  Sign in with Google
+</button>
 
         </div>
 

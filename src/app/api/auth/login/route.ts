@@ -40,6 +40,7 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
+    
     const token = jwt.sign(
   {
     userId: user._id.toString(),
