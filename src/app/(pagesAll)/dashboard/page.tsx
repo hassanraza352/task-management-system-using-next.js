@@ -1,10 +1,9 @@
 "use client";
 import Link from 'next/link'
 import {useAuth} from '@/context/AuthContext'
-import { useState,useEffect} from "react";
+import {useState,useEffect} from "react";
 import Loading from "@/app/(pagesAll)/dashboard/loading";
 import Image from "next/image"
-
 interface Task {
   _id: string;
   title: string;
@@ -19,7 +18,7 @@ interface Task {
 function Dashboard() {
   const { user, loading } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
-const [tasksLoading, setTasksLoading] = useState(true);
+  const [tasksLoading, setTasksLoading] = useState(true);
 
 
 
@@ -93,7 +92,6 @@ const handleTaskComplete = async (task: Task) => {
 
     const data = await response.json();
 
-    console.log("COMPLETE RESPONSE:", data);
 
     if (!response.ok) {
       console.error(data.message);
@@ -105,10 +103,11 @@ const handleTaskComplete = async (task: Task) => {
         item._id === task._id ? data.task : item
       )
     );
-  } catch (error) {
+  } catch (error) { 
     console.error("Complete task error:", error);
   }
 };
+
 const upcomingTasks = [...tasks]
   .filter((task) => task.dueDate && task.status !== "Done")
   .sort(
