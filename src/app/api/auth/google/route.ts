@@ -12,7 +12,6 @@ export async function GET() {
     access_type: "offline",
     prompt: "select_account",
   });
-
   return NextResponse.redirect(
     `${googleAuthUrl}?${params.toString()}`
   );

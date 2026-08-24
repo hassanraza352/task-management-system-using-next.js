@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 function Register() {
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -177,7 +178,7 @@ function Register() {
               <div className="password-field">
 
                 <input
-                  type="password"
+                type={showPassword ? "text" : "password"}
                   id="password"
                   placeholder="Create a password"
                   value={password}
@@ -192,6 +193,7 @@ function Register() {
                   type="button"
                   className="eye-btn"
                   disabled={isLoading}
+                   onClick={() => setShowPassword(!showPassword)}
                 >
                   👁️
                 </button>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 function Login() {
+const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -143,7 +144,7 @@ function Login() {
               <div className="password-field">
 
                 <input
-                  type="password"
+                 type={showPassword ? "text" : "password"}
                   id="password"
                   placeholder="Enter your password"
                   value={password}
@@ -157,6 +158,7 @@ function Login() {
                   type="button"
                   className="eye-btn"
                   disabled={isLoading}
+               onClick={() => setShowPassword(!showPassword)}
                 >
                   👁️
                 </button>
