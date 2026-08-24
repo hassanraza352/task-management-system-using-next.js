@@ -139,7 +139,7 @@ for (let day = 1; day <= daysInMonth; day++) {
     <div
       key={day}
       className={`calendar-cell ${isToday ? "today" : ""}`}
-    >
+       >
       <span className="date-num">
         {day}
       </span>

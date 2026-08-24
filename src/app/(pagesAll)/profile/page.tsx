@@ -87,7 +87,6 @@ function Profile() {
         throw new Error(data.message || "Failed to update profile");
       }
 
-      console.log("Profile updated:", data.user);
 
       updateUser(data.user);
 
@@ -136,7 +135,6 @@ function Profile() {
       alert("Please select an image first");
       return;
     }
-
     try {
       setUploading(true);
 
@@ -268,8 +266,7 @@ function Profile() {
     tasks.forEach((task: Task) => {
       const category = task.category?.trim() || "Uncategorized";
 
-      categoryCount[category] =
-        (categoryCount[category] || 0) + 1;
+      categoryCount[category] =(categoryCount[category] || 0) + 1;
     });
 
     // =========================
@@ -366,9 +363,7 @@ function Profile() {
           doc.addPage();
           y = 20;
         }
-
         doc.text(`${category}: ${count} task(s)`, 25, y);
-
         y += 8;
       }
     );
@@ -475,6 +470,14 @@ function Profile() {
     alert("Failed to generate report");
   }
 };
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
 
   return (
     <main className="main-content">
