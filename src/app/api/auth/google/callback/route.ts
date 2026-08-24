@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
           client_id: process.env.GOOGLE_CLIENT_ID!,
           client_secret: process.env.GOOGLE_CLIENT_SECRET!,
           redirect_uri:
-            process.env.GOOGLE_REDIRECT_URI!,
+  "https://task-management-system-using-next-j.vercel.app/api/auth/google/callback",
           grant_type: "authorization_code",
         }),
       }
